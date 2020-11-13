@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v2
       # //TEMP we should build a container based on container: mariadb:version
       # with all the dependencies
-      - name: Setup Python:
+      - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
