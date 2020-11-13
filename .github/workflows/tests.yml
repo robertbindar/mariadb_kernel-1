@@ -1,32 +1,45 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: CI
+name: Python tests
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: push
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   tests:
     runs-on: ubuntu-latest
     container: mariadb:10.5
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Install dependencies
-      run: |
-        apt-get update
-        apt-get install -y python-pip
-        pip install -r dev-requirements.txt
-        python setup.py develop
-        pip freeze
+      - uses: actions/checkout@v2
+      # //TEMP we should build a container based on container: mariadb:version
+      # with all the dependencies
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y python3-pip python3-venv
 
-    - name: Test with pytest
-      run: |
-        pytest -v --maxfail=2 --color=yes mariadb_kernel/tests/
+      - name: Setup python venv
+        run: |
+          python3 -m venv .venv
+          source .venv/bin/activate
+          python3 -m pip install wheel
+
+      - name: Install python requirements
+        run: |
+          source .venv/bin/activate
+          python3 -m pip install -r dev-requirements.txt
+
+      - name: Setup python3 develop
+        run: |
+          source .venv/bin/activate
+          python3 setup.py develop
+          pip freeze
+
+      - name: Test with pytest
+        run: |
+          source .venv/bin/activate
+          pytest -v --maxfail=2 --color=yes mariadb_kernel/tests/

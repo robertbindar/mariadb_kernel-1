@@ -1,0 +1,97 @@
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.3.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-ast
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-yaml
+        name: Check yaml files
+      - id: debug-statements
+        name: Check for Python debug statements
+      - id: trailing-whitespace
+        name: Check trailing whitespace
+        args: [--markdown-linebreak-ext=md]
+  - repo: https://gitlab.com/pycqa/flake8.git
+    rev: 3.8.4
+    hooks:
+      - id: flake8
+        name: Check python (flake8)
+        args: ["--ignore=E501,E226"]
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.25.0
+    hooks:
+      - id: yamllint
+        name: Check yaml files (yamllint)
+  - repo: https://github.com/detailyang/pre-commit-shell
+    rev: v1.0.6
+    hooks:
+      - id: shell-lint
+        name: Check for shell syntax (shellcheck)
+        args: ["-x"]
+  - repo: https://github.com/fauust/pre-commit-shfmt
+    rev: v1.1
+    hooks:
+      - id: shell-fmt
+        name: Check shell style (shfmt)
+        args: ["-d", "-i", "2", "-ci"]
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: v0.11.0
+    hooks:
+      - id: markdownlint
+        name: Check for markdown lint (mdl)
+  - repo: local
+    hooks:
+      - id: docker-hadolint
+        name: Run hadolint with docker
+        language: docker_image
+        entry: hadolint/hadolint:latest hadolint
+        files: Dockerfile
+      - id: dockerfilelint
+        name: Run dockerfilelint with docker
+        language: docker_image
+        entry: replicated/dockerfilelint:latest
+        files: Dockerfile
+      - id: docker-prettier
+        name: Run prettier with docker
+        entry: tmknom/prettier:latest -l
+        language: docker_image
+        files: "\\.(\
+          css|less|scss\
+          |graphql|gql\
+          |html\
+          |js|jsx\
+          |json\
+          |md|markdown|mdown|mkdn\
+          |mdx\
+          |ts|tsx\
+          |vue\
+          |yaml|yml\
+          )$"
+        # - id: docker-prettier-json
+        #   name: Run prettier on json files with docker
+        #   entry: mohrere/prettier:2.0.2 --parser json -c
+        #   language: docker_image
+        #   types: [json]
+        # - id: docker-prettier-yaml
+        #   name: Run prettier on yaml files with docker
+        #   entry: mohrere/prettier:2.0.2 --parser yaml -c
+        #   language: docker_image
+        #   types: [yaml]
+        # - id: docker-prettier-markdown
+        #   name: Run prettier on markdown files with docker
+        #   entry: mohrere/prettier:2.0.2 --parser markdown -c
+        #   language: docker_image
+        #   types: [markdown]
+        # - id: docker-shell-shfmt
+        #   name: Run shfmt with docker
+        #   entry: mvdan/shfmt:latest -d -i 2 -ci
+        #   language: docker_image
+        #   types: [shell]
+        # - id: docker-shell-lint
+        #   name: Run shellcheck with docker
+        #   language: docker_image
+        #   entry: koalaman/shellcheck:stable
+        #   types: [shell]
