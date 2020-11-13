@@ -36,7 +36,8 @@ jobs:
       - name: Setup python3 develop
         run: |
           source .venv/bin/activate
-          ls -la ./
+          git init
+          git remote add origin https://github.com/MariaDB/mariadb_kernel.git
           git fetch origin --tags
           python3 setup.py develop
           pip freeze
