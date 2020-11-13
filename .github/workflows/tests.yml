@@ -38,7 +38,7 @@ jobs:
           source .venv/bin/activate
           git init
           git remote add origin https://github.com/MariaDB/mariadb_kernel.git
-          git fetch origin --tags
+          git pull origin master
           python3 setup.py develop
           pip freeze
 
